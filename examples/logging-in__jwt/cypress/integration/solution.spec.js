@@ -14,16 +14,16 @@ before(function fetchUser () {
   })
 })
 
-// but set the user before visiting the page
+describe('bypassing UI login', () => {
+  // but set the user before visiting the page
 // so the app thinks it is already authenticated
-beforeEach(function setUser () {
-  cy.visit('/')
-  // the page should be opened and the user should be logged in
-  // eslint-disable-next-line no-undef
-  window.localStorage.setItem('user', JSON.stringify(authenticatedUser))
-})
+  beforeEach(function setUser () {
+    cy.visit('/')
+    // the page should be opened and the user should be logged in
+    // eslint-disable-next-line no-undef
+    window.localStorage.setItem('user', JSON.stringify(authenticatedUser))
+  })
 
-describe('bypassing login through UI', () => {
   it('shows logged in user', () => {
     // use contains() to check for a select with a specific text
     cy.contains('li', 'Test User').should('be.visible')
@@ -33,5 +33,25 @@ describe('bypassing login through UI', () => {
     // use get() to retrieve an element to act on
     cy.get('[href="/login"]').click()
     cy.contains('h2', 'Login').should('be.visible')
+  })
+
+  it('makes authenticated request', () => {
+    // we can make authenticated request ourselves
+    // since we know the token
+    cy.request({
+      url: 'http://localhost:4000/users',
+      auth: {
+        bearer: authenticatedUser.token,
+      },
+    })
+    .its('body')
+    .should('deep.equal', [
+      {
+        id: 1,
+        username: 'test',
+        firstName: 'Test',
+        lastName: 'User',
+      },
+    ])
   })
 })

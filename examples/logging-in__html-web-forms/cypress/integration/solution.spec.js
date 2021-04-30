@@ -97,7 +97,7 @@ describe('Logging In - HTML Web Form', function () {
 
       //do the same thing, just with a different url and text
       cy.visit('/admin')
-      cy.get('h1').should('contain', 'Admin')
+      cy.get('h1').should('contain.text', 'Admin')
 
       /**
        * Your code above here

@@ -14,19 +14,20 @@ before(function fetchUser () {
   })
 })
 
-// but set the user before visiting the page
-// so the app thinks it is already authenticated
-beforeEach(function setUser () {
-  cy.visit('/')
-  // the page should be opened and the user should be logged in
-  // eslint-disable-next-line no-undef
-  window.localStorage.setItem('user', JSON.stringify(authenticatedUser))
-})
-
 describe('bypassing UI login', () => {
+  // but set the user before visiting the page
+  // so the app thinks it is already authenticated
+  beforeEach(function setUser () {
+    cy.visit('/')
+    // the page should be opened and the user should be logged in
+    // eslint-disable-next-line no-undef
+    window.localStorage.setItem('user', JSON.stringify(authenticatedUser))
+  })
+
   it('shows logged in user', () => {
     // your test code here
     //1. use cy.contains('li', 'Test User').should('be.visible')
+    cy.contains('h1', 'Hi Test!').should('be.visible')
   })
 
   it('should log out', () => {
